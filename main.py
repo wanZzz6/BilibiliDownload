@@ -10,7 +10,7 @@ if __name__ == '__main__':
     # 获取各个part标题，及 视频总标题
     _, prefix = get_index(url.format(av, 1))
     # 重命名文件，去掉公共前缀，可单独运行rename_file，以重命名所有文件
-    # prefix = '【Python-Django】2018年最新的Python3yuDjango打造爱家租房项目实战'
+    prefix = '【Python-Django】2018年最新的Python3yuDjango打造爱家租房项目实战'
     rename_file(prefix=prefix)
 
     while start <= end:
@@ -23,6 +23,7 @@ if __name__ == '__main__':
             result = subprocess.call(cmd, timeout=timeout)
             if result == 0:
                 print('OK')
+                rename_file(num=start)
             else:
                 print('Error!')
             start += 1
@@ -30,6 +31,5 @@ if __name__ == '__main__':
             continue
         except Exception as e:
             print(e)
-            rename_file(num=start)
             print('Next Start:', start)
             break
