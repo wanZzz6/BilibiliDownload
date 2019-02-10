@@ -44,7 +44,6 @@ def rename_file(path='.', prefix='', num=None):
                 except KeyError as e:
                     print('重命名失败，请检查已下载文件前缀是否与视频标题一致，\
                     若不一致，请在main 方法里手动指定prefix\n',e)
-                    raise KeyError
                     return
             else:
                 newname = re.sub('(' + prefix + ')?' + r'[\s#]*', '', d)
