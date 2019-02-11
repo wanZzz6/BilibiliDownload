@@ -23,33 +23,41 @@ def rename_file(path='.', prefix='', num=None):
     if num:
         name = part_index[num]
         for d in os.listdir(path):
+            if d.endswith('xml'):
+                os.remove(os.path.join(path, d))
+                continue
             if name in d:
-                newname = re.search('\d+\.\s*' + name + '\..*', d).group()
-                os.rename(d, newname)
-                return
-    print('prefix', prefix)
+                newname = re.search('\d+\.\s*'+ name + '\..*', d).group()
+                if newname != d:
+                    os.rename(d, newname)
+                    print('重命名：', d, '-->', newname)
+        return
+
     for d in os.listdir(path):
         if d.endswith('xml'):
             os.remove(os.path.join(directory, d))
         elif d.endswith('download'):
             pass
         else:
-            temp = re.search('(' + prefix + ')*' + r'[\s#]*?(\d+).*(\..*)', d)
-            if temp:
-                try:
+            try:
+                temp = re.search('(' + prefix + ')*' + r'[\s#]*?(\d+).*(\..*)', d)
+                if temp:
                     newname = temp.group(2) + '.' + part_index[int(temp.group(2))] + temp.group(3)
                     if d != newname:
                         os.rename(d, newname)
                         print('重命名：', d, '-->', newname)
-                except KeyError as e:
-                    print('重命名失败，请检查已下载文件前缀是否与视频标题一致，\
-                    若不一致，请在main 方法里手动指定prefix\n',e)
-                    return
-            else:
-                newname = re.sub('(' + prefix + ')?' + r'[\s#]*', '', d)
-                if d != newname:
-                    print('重命名：', d, '-->', newname)
-                    os.rename(d, newname)
+                else:
+                    newname = re.sub('(' + prefix + ')?' + r'[\s#]*', '', d)
+                    if d != newname:
+                        os.rename(d, newname)
+                        print('重命名：', d, '-->', newname)
+            except KeyError as e:
+                print('重命名失败，请检查已下载文件前缀是否与视频标题一致，\
+                    若不一致，请在main 方法里手动指定prefix\n', e)
+                return
+            except Exception as e:
+                print(e)
+                continue
 
 
 def get_index(url):
