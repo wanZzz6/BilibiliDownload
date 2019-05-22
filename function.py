@@ -27,7 +27,10 @@ def rename_file(path='.', prefix='', num=None):
                 os.remove(os.path.join(path, d))
                 continue
             if name in d:
-                newname = re.search('\d+\.\s*'+ name + '\..*', d).group()
+                #  version :1
+#                 newname = re.search('\d+\.\s*'+ name + '\..*', d).group()
+                temp = re.search('\(([^)]*)\).*?(\..*)$', d)
+                newname = temp.group(1) + temp.group(2)
                 if newname != d:
                     os.rename(d, newname)
                     print('重命名：', d, '-->', newname)
@@ -37,10 +40,11 @@ def rename_file(path='.', prefix='', num=None):
         if d.endswith('xml'):
             os.remove(os.path.join(directory, d))
         elif d.endswith('download'):
-            pass
+            continue
         else:
             try:
-                temp = re.search('(' + prefix + ')*' + r'[\s#]*?(\d+).*(\..*)', d)
+#                 temp = re.search('(' + prefix + ')*' + r'[\s#]*?(\d+).*(\..*)', d)
+                temp = re.search('(' + prefix + ')*' + r'.*?P(\d+).*(\..*)$', d)
                 if temp:
                     newname = temp.group(2) + '.' + part_index[int(temp.group(2))] + temp.group(3)
                     if d != newname:
@@ -56,8 +60,9 @@ def rename_file(path='.', prefix='', num=None):
                     若不一致，请在main 方法里手动指定prefix\n', e)
                 return
             except Exception as e:
-                print(e)
+                print('Error in "rename_file"', e)
                 continue
+
 
 
 def get_index(url):

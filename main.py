@@ -19,13 +19,17 @@ if __name__ == '__main__':
             cmd = 'you-get -o {directory} {}'.format(url.format(av, start), directory=directory)
             result = subprocess.call(cmd, timeout=timeout)
             if result == 0:
-                print('OK')
+                print('Download Success!--> Rename...', end='')
                 rename_file(path=directory, num=start)
+                print('OK')
             else:
-                print('Error!')
+                print('Download Fail!')
             start += 1
         except subprocess.TimeoutExpired:
             continue
-        except Exception as e:
+        except AttributeError as e:
             print(e)
+            start += 1
+            continue
+        except Exception as e:
             break

@@ -1,2 +1,2 @@
-you-get==0.4.1205
+you-get
 requests==2.18.4
