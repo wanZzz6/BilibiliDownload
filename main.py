@@ -1,35 +1,29 @@
-from function import *
-from config import *
 import subprocess
 import os
+from function import call_command, get_index, rename_file, download_task
 
+# 保存目录(不能有空格以及其他非法字符，否则会下载失败)
+directory = r'F:\python操作数据库ORM'
+
+# 视频编号，av开头
+av = 'av83014115'
+
+# 从第几个part开始下载， 如果一次没下载完，则下次需要调整此参数
+# 若该视频没有 分 part，则设置 start = end =1, 若下载所有分片,设置end=-1
+start = 1
+end = -1
+
+
+def main():
+    global part_index, prefix
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    os.chdir(directory)
+
+    download_task(av, start, end)
+    part_index, prefix = get_index(av)
+    rename_file(directory, part_index, prefix)
+    print('Finish!')
 
 if __name__ == '__main__':
-
-    os.chdir(directory)
-    # 获取各个part标题，及 视频总标题
-    _, prefix = get_index(url.format(av, 1))
-    # 重命名文件，去掉公共前缀，可单独运行rename_file，以重命名所有文件
-    # prefix = '【Python-Django】2018年最新的Python3yuDjango打造爱家租房项目实战'
-    rename_file(prefix=prefix)
-
-    while start <= end:
-        try:
-            # print(start, end='\t')
-            cmd = 'you-get -o {directory} {}'.format(url.format(av, start), directory=directory)
-            result = subprocess.call(cmd, timeout=timeout)
-            if result == 0:
-                print('Download Success!--> Rename...', end='')
-                rename_file(path=directory, num=start)
-                print('OK')
-            else:
-                print('Download Fail!')
-            start += 1
-        except subprocess.TimeoutExpired:
-            continue
-        except AttributeError as e:
-            print(e)
-            start += 1
-            continue
-        except Exception as e:
-            break
+    main()
